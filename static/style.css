@@ -1,0 +1,115 @@
+/* style.css */
+
+body {
+  font-family: Arial, sans-serif;
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 0 16px;
+  background-color: #f5f5f5;
+  color: #333;
+  height: 100%;
+  background-image: url('/static/images/bg.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.display-block{
+  background-color: white;
+  padding: 4%;
+  border-color: black;
+  border-radius: 3%;
+}
+
+h1 {
+  font-size: 1.8em;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+label {
+  display: block;
+  /* margin: 12px 0 4px; */
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+/* Hide empty message paragraphs */
+#message:empty,
+#rfid-status:empty,
+#face-status:empty,
+#result:empty {
+  display: none;
+}
+
+p {
+  margin: 12px 0;
+  padding: 10px;
+  background-color: #eef;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+video {
+  width: 100%;
+  max-height: 240px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 16px 0;
+}
+
+a button {
+  width: auto;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+
+/* red border on invalid, green on valid */
+input:invalid {
+  border: 2px solid #e00;
+}
+input:valid {
+  border: 2px solid #0a0;
+}
+
+/* error message styling */
+.error-msg {
+  color: #b00;
+  font-size: 0.9em;
+  margin-top: 4px;
+  min-height: 1em;        /* reserve space even when empty */
+}

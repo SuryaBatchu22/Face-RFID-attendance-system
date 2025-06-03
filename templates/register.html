@@ -1,0 +1,77 @@
+<!-- templates/register.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Register{% if active %} for {{ subject_name }}{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+  <div class="display-block">
+  <h1>
+    {% if active %}
+      Register for {{ subject_name }}
+    {% else %}
+      Registration Closed
+    {% endif %}
+  </h1>
+
+  {% if active %}
+  <script>
+    (function(){
+      const today = new Date().toISOString().slice(0,10);
+      const start = new Date(`${today}T{{ start_time }}`);
+      const end   = new Date(`${today}T{{ end_time }}`);
+      const now   = Date.now();
+      if (now < start) {
+        setTimeout(()=> location.reload(), start - now);
+      }
+      if (now < end) {
+        setTimeout(()=> location.reload(), end - now);
+      }
+    })();
+  </script>
+  {% endif %}
+
+  <label>Roll:
+    <input     
+    id="roll"
+    placeholder="R00000000"
+    required
+    pattern="^[A-Za-z0-9]+$"
+    title="Only letters and numbers, no spaces"
+    maxlength="9" {% if not active %}disabled{% endif %}>
+    <div class="error-msg" id="roll-error"></div>
+  </label><br>
+  <label>Name:
+    <input 
+    id="name"
+    placeholder="Full Name"
+    required
+    pattern="^[A-Za-z ]{1,25}$"
+    title="Only letters and spaces, max 25 characters"
+    maxlength="25" {% if not active %}disabled{% endif %}>
+    <div class="error-msg" id="name-error"></div>
+  </label><br>
+  <label>Email:
+    <input 
+    id="email"
+    type="email"
+    placeholder="email@example.com"
+    required {% if not active %}disabled{% endif %}>
+    <div class="error-msg" id="email-error"></div>
+  </label><br>
+  <button id="scan-rfid-reg" {% if not active %}disabled{% endif %}>Scan RFID</button>
+  <p id="rfid-status"></p>
+  <video id="video" width="320" height="240" autoplay></video><br>
+  <button id="capture-face" {% if not active %}disabled{% endif %}>Capture Face</button>
+  <p id="face-status"></p>
+  <button id="submit" {% if not active %}disabled{% endif %}>Register</button>
+  <p id="result"></p>
+  <a href="{{ url_for('attendance_page') }}">
+    <button {% if not active %}disabled{% endif %}>Back to Attendance</button>
+  </a>
+  <script src="{{ url_for('static',filename='scripts.js') }}"></script>
+</div>
+</body>
+</html>

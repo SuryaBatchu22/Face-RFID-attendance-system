@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Take Attendance{% if active %} for {{ subject_name }}{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+  <div class="display-block">
+  <h1>
+    {% if active %}
+      Take Attendance for {{ subject_name }}
+    {% else %}
+      Attendance Closed
+    {% endif %}
+  </h1>
+
+  {% if active %}
+  <script>
+    (function(){
+      const today = new Date().toISOString().slice(0,10);
+      const start = new Date(`${today}T{{ start_time }}`);
+      const end   = new Date(`${today}T{{ end_time }}`);
+      const now   = Date.now();
+      if (now < start) {
+        setTimeout(()=> location.reload(), start - now);
+      }
+      if (now < end) {
+        setTimeout(()=> location.reload(), end - now);
+      }
+    })();
+  </script>
+  {% endif %}
+
+  <button id="scan-rfid" {% if not active %}disabled{% endif %}>Scan RFID</button>
+  <button id="scan-face" disabled>Scan Face</button>
+  <p id="message"></p>
+  <video id="video" width="320" height="240" autoplay></video><br>
+  <a href="{{ url_for('register_page') }}">
+    <button {% if not active %}disabled{% endif %}>Register Student</button>
+  </a>
+  <script src="{{ url_for('static',filename='scripts.js') }}"></script>
+</div>
+</body>
+</html>
