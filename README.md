@@ -38,7 +38,7 @@ Generates daily Excel sheets, emails students on registration & attendance, and 
 
 1. **Clone** the repository  
    ```bash
-   git clone https://github.com/yourusername/Face-RFID-attendance-system.git
+   git clone https://github.com/suryabatchu9922/Face-RFID-attendance-system.git
    cd Face-RFID-attendance-system
    ```
 2. **Create & activate** a virtual environment  
