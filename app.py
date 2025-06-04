@@ -1,5 +1,6 @@
-# app.py
-
+from dotenv import load_dotenv
+# ── Load environment variables from .env ────────────────────────────────────
+load_dotenv()
 import os
 import base64
 import datetime
@@ -13,9 +14,7 @@ import smtplib
 from email.message import EmailMessage
 from flask import Flask, render_template, request, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
-from dotenv import load_dotenv
-# ── Load environment variables from .env ────────────────────────────────────
-load_dotenv()
+
 
 # ── DEMO MODE CONFIG ─────────────────────────────────────────────────────────
 # When True, /scan_rfid returns a preset UID instead of reading hardware.
@@ -34,6 +33,8 @@ CLASS_ACCOUNT = {
     "email":        os.getenv("GMAIL_USER"),
     "app_password": os.getenv("GMAIL_APP_PASSWORD")
 }
+print("Loaded GMAIL_USER:       ", os.getenv("GMAIL_USER"))
+print("Loaded GMAIL_APP_PASSWORD:", os.getenv("GMAIL_APP_PASSWORD"))
 
 # Define each class: its name, Excel file, schedule, and professor email
 CLASSES = {
@@ -41,9 +42,9 @@ CLASSES = {
         'name':          'Embedded Systems',
         'students_file': 'embedded_students.xlsx',
         'prefix':        'embedded',
-        'start_time':    datetime.time(13, 45),     # class start at 13:30
+        'start_time':    datetime.time(16, 10),     # class start at 13:30
         'prof_email':    os.getenv("EMBEDDED_PROF"), #paste your subject professor email here
-        'days':          [0, 2, 3, 4, 6]             # Mon, Wed, Thu, Fri, Sun
+        'days':          [0, 1, 2, 3, 4, 5, 6]             # Mon, Wed, Thu, Fri, Sun
     },
     'intelligent': {
         'name':          'Intelligent Systems',
@@ -94,22 +95,37 @@ def send_professor_report(subject_key, subject_cfg):
         subj = subject_cfg['name']
         subject_line = f"Daily Attendance Sheet: {subj} ({today})"
         body = f"Please find attached the attendance sheet for {subj} on {today}."
-        send_email(subject_cfg['prof_email'], subject_line, body, attachment_path=path)
-
+        try:
+            send_email(subject_cfg['prof_email'], subject_line, body, attachment_path=path)
+            print(f"Professor email sent for {subject_key}")
+        except Exception as e:
+            # Log but do not crash the scheduler
+            print(f"Failed to send professor email for {subject_key}: {e}")
+ 
 # ── STUDENT EMAIL HELPERS ────────────────────────────────────────────────────
 def send_registration_email(cfg, student_email, student_name):
     """Notify student of successful registration."""
     subj = cfg['name']
     subject_line = f"Registered for {subj} Attendance"
     body = f"Hello {student_name},\n\nYou have been registered for {subj} attendance."
-    send_email(student_email, subject_line, body)
+    try:
+        send_email(student_email, subject_line, body)
+        print(f"Registration email sent to {student_email}")
+    except Exception as e:
+        # Log but let registration succeed
+        print(f"Failed to send registration email to {student_email}: {e}")
 
 def send_attendance_email(cfg, student_email, student_name):
     """Notify student when their attendance is marked."""
     subj = cfg['name']
     subject_line = f"Attendance Marked for {subj}"
     body = f"Dear {student_name},\n\nYour attendance for {subj} has been marked."
-    send_email(student_email, subject_line, body)
+    try:
+        send_email(student_email, subject_line, body)
+        print(f"Attendance email sent to {student_email}")
+    except Exception as e:
+        # Log but do not prevent the JSON response
+        print(f"Failed to send attendance email to {student_email}: {e}")
 
 # ── CLASS WINDOW HELPER ───────────────────────────────────────────────────────
 def get_current_class():
@@ -403,7 +419,7 @@ def verify_both():
     row = students_df[students_df["Student_ID"].astype(str)==uid].iloc[0]
     return jsonify(
         message=result,
-        roll  = row["Roll_Number"],
+        roll  = str(row["Roll_Number"]),
         name  = row["Name"],
         email = row["Email"],
         time  = datetime.datetime.now().strftime("%H:%M:%S")
