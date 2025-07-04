@@ -7,7 +7,7 @@ Generates daily Excel sheets, emails students on registration & attendance, and 
 
 ## Key Features
 
-- **Dual-factor check**: RFID card scan **and** live face match  
+- **Dual-factor check**: RFID card scan **and** live face match.  
 - **Multi-class support**: Separate schedules, student lists, and reports per subject  
 - **Day-of-week controls**: Only active on designated class days  
 - **Automated emails**:  
